@@ -1,0 +1,105 @@
+(footprint "tue_SS12D00_3P_2.5mm"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 1.86 2.972501 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "cb38a06a-ab65-4f5b-b273-c0918cffdb93")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Value" "SW_SPDT"
+		(at 1.92 -2.46 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "176f351c-1633-4203-8662-1bb9b4bcf56e")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" "~"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "3fd433eb-975e-48b9-a3f6-6d40fccb24d8")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" "Switch, single pole double throw"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "d21a5814-1bdf-494f-8d39-30771ef31c2a")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_rect
+		(start 0 0)
+		(end 3.7 8.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.SilkS")
+		(uuid "82f40f66-991b-46b4-b07e-a5e154f6602d")
+	)
+	(pad "1" thru_hole circle
+		(at 1.85 1.75)
+		(size 1.2 1.2)
+		(drill 0.65)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "f22372c3-791b-44cb-b2cf-96bcd12ac1ec")
+	)
+	(pad "2" thru_hole circle
+		(at 1.85 4.25)
+		(size 1.2 1.2)
+		(drill 0.65)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "b5614a4e-4c97-4890-9822-a5a5a9e3bc26")
+	)
+	(pad "3" thru_hole circle
+		(at 1.85 6.75)
+		(size 1.2 1.2)
+		(drill 0.65)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "31cb0d83-085d-4b15-9d20-ab33fa8f630e")
+	)
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/lib/SS12D00/SPDT slide switch SS12D00.step"
+		(offset
+			(xyz 1.85 -4.25 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 -90)
+		)
+	)
+)

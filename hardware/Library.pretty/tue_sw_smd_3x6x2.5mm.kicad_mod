@@ -1,0 +1,98 @@
+(footprint "tue_sw_smd_3x6x2.5mm"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0.059999 -1.32 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "6f37b87b-834b-45e3-83e9-9a69dea3a39e")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Value" "RESET"
+		(at 0 -4.43 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "3cfea520-a111-41ab-a84a-f2ca1e342e47")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "7e5f3357-6c9f-4765-8f9e-b4183051b0df")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" "Push button switch, generic, two pins"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "0c655ea7-a759-44dc-b917-486ccf400532")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_poly
+		(pts
+			(xy -3.25 -2.000001) (xy -3.25 2.000001) (xy 3.25 2.000001) (xy 3.25 -2.000001)
+		)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.SilkS")
+		(uuid "3f61d485-f185-45b3-bd3a-156088329cc6")
+	)
+	(pad "1" smd roundrect
+		(at 3.94 0)
+		(size 1.8 1.3)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(roundrect_rratio 0.15)
+		(thermal_bridge_angle 45)
+		(uuid "a22a04f6-e0f6-49e6-ad5a-63963c3c5f25")
+	)
+	(pad "2" smd roundrect
+		(at -3.94 0)
+		(size 1.8 1.3)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(roundrect_rratio 0.15)
+		(thermal_bridge_angle 45)
+		(uuid "7288d6ae-02ad-468e-a3b1-86c0e7f288ab")
+	)
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/lib/Tactile_SW/tue_SMD_SW_3x6x2.5/Tactile_SMD_3x6x2.5mm.STEP"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz -90 0 0)
+		)
+	)
+)

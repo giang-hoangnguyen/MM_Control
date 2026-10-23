@@ -1,0 +1,52 @@
+﻿Nhóm,Ký hiệu (Reference),Số lượng,Giá trị / mã linh kiện,Kiểu chân (footprint),Ghi chú mua hàng và hàn
+IC,U5,1,STM32F407VET6,"LQFP-100 14x14 mm, bước chân 0,5 mm","MCU. Khó hàn tay nhất: cần mỏ hàn mũi nhỏ + flux, hoặc nhờ xưởng"
+IC,"U1,U3,U4,U6",4,DRV8872DDA,HTSOP-8 có pad nhiệt phía dưới,Driver động cơ DC. Pad nhiệt nằm dưới thân chip: cần hot-air hoặc lò reflow + kem hàn
+IC,U12,1,TPS5430DDA,SO-PowerPAD-8,Buck VM → 5 V. Pad nhiệt phía dưới như DRV8872
+IC,U2,1,AMS1117-3.3,SOT-223,"LDO 5 V → 3,3 V"
+IC,U13,1,TJA1051T/3,SOIC-8,Transceiver CAN (ghi trong schematic: TJA1051T-3)
+Module,"U7,U8,U9",3,TMC2209 SilentStepStick (V1.x),"Module 16 chân 2,54 mm (footprint tue_TMC2209)",Mua module có sẵn tản nhiệt; cắm vào đầu cái (header 1x8 x2 mỗi module) hoặc hàn thẳng. Kiểm tra sơ đồ chân module khớp footprint trước khi hàn
+Nguồn,D2,1,SS34,SMA (DO-214AC),Diode schottky của buck
+Nguồn,L2,1,22 µH,"SMD 10,4 x 10,4 x 4,8 mm",Cuộn cảm buck. Chọn dòng bão hòa >= 3 A (tải buck tối đa 3 A theo datasheet TPS5430)
+Nguồn,RV1,1,"20 kΩ, Bourns 3296W","THT, núm vặn đứng",Chỉnh điện áp +5 V của buck. Xem hướng dẫn chỉnh trong tài liệu
+Tinh thể,Y1,1,8 MHz,"HC49-4H, THT","Kèm C17, C18 = 10 pF"
+Tụ,C1,1,220 µF,"Điện phân SMD 6,3 x 7,7 mm",Trên rail +5 V (đầu ra buck): điện áp định mức >= 10 V
+Tụ,"C8,C9,C11,C13,C30,C31,C32",7,100 µF,"Điện phân SMD 6,3 x 5,9 mm","Trên rail VM (driver DC, driver bước). Điện áp định mức không ghi; footprint 6,3 mm giới hạn dải điện áp có sẵn, kiểm tra catalog khi chọn"
+Tụ,C6,1,10 µF,Tantalum case A (EIA-3216-18),"Trên rail VM (đầu vào buck): điện áp định mức >= 1,5 x VM, nên chọn tụ gốm/tantalum >= 25 V nếu VM = 12 V. Chú ý cực tính tantalum. Schematic không ghi điện áp"
+Tụ,C2,1,10 µF,Tantalum case A (EIA-3216-18),"Trên rail +3,3 V: điện áp định mức >= 6,3 V (chọn 10 V). Chú ý cực tính"
+Tụ,"C5,C7,C10,C12,C34,C39,C40,C41",8,100 nF,1206,Trên rail VM: điện áp định mức >= 50 V
+Tụ,"C4,C43",2,100 nF,1206,"Trên rail +3,3 V (C4) và +5 V (C43): >= 16 V"
+Tụ,"C15,C16,C20,C21,C22,C23,C24,C25,C26,C27,C36,C38",12,100 nF,0603,Tụ lọc nguồn MCU và chân NRST
+Tụ,"C28,C29",2,1 µF,0603,
+Tụ,"C14,C19",2,"2,2 µF",0603,"Nối vào chân VCAP_1 và VCAP_2 của STM32, theo datasheet MCU thường dùng 2,2 µF"
+Tụ,"C17,C18",2,10 pF,0603,Tải thạch anh
+Tụ,C37,1,10 nF,0603,Bootstrap buck
+Điện trở,"R2,R3,R4,R20",4,"0,2 Ω",2512,"Điện trở cảm biến dòng ISEN của DRV8872. Ngưỡng giới hạn dòng tính ~1,75 A mỗi kênh (0,35 V / 0,2 Ω theo datasheet DRV8872)"
+Điện trở,"R6,R8,R11",3,10 kΩ,0603,
+Điện trở,"R1,R7",2,100 kΩ,0603,
+Điện trở,R5,1,1 MΩ,0603,Song song thạch anh
+Điện trở,R27,1,"4,7 kΩ",0603,Chia áp hồi tiếp buck
+Điện trở,R18,1,12 kΩ,0603,Chia áp hồi tiếp buck (nối RV1)
+Điện trở,R15,1,43 kΩ,0603,Chia áp chân EN của buck (cùng R1)
+Điện trở,"R9,R10",2,"5,1 kΩ",0603,CC1/CC2 của USB-C
+Điện trở,R12,1,"1,5 kΩ",0603,Kéo lên D+ (USB full-speed)
+Điện trở,"R13,R14",2,22 Ω,0603,Nối tiếp D+/D-
+Điện trở,R17,1,680 Ω (ghi 681),0603,LED 5V1
+Điện trở,R23,1,1 kΩ (ghi 102),0603,LED VCC1
+Điện trở,R21,1,120 Ω,0603,Điện trở kết cuối CAN
+Điện trở,"RN1,RN2,RN3",3,"470 Ω (ghi 471), mảng 4 điện trở",R_Array_Concave_4x0603,Điện trở hạn dòng cho các LED còn lại
+LED,"DC_Fault1-4, MCU1, STEP_EN1, 3V3, 5V1, VCC1",9,LED,0603,"Màu LED không quy định trong schematic; chọn tùy ý (gợi ý: lỗi = đỏ, nguồn = xanh)"
+Kết nối,"J8, J7, J23, J24, J25",5,"Terminal vít 5,08 mm 2 cực (Phoenix MKDS 1,5/2-5,08)","THT, cắm ngang","J8 = nguồn vào; J7, J23, J24, J25 = DC1…DC4"
+Kết nối,J17,1,"Terminal vít 5,0 mm 2 cực (MaiXu MX126-5.0-02P)",THT,"CAN_L, CAN_H"
+Kết nối,"J4,J5,J6",3,JST XH 4 chân B4B-XH-A,"THT, cắm đứng",Động cơ bước. Mua kèm dây/đầu XH 4P đối ứng
+Kết nối,J1,1,Molex SPOX 5267-03A (3 chân),"THT, cắm đứng","Bus servo: GND, VM1, tín hiệu. Mua kèm đầu cắm SPOX đối ứng"
+Kết nối,J22,1,USB-C GCT USB4105-xx-A (16 chân),"SMD, cắm ngang","Cổng USB (dữ liệu, không cấp nguồn cho board)"
+Kết nối,J2,1,"Header 1x6, 2,54 mm",THT,"SPI3: CS1-3, MOSI, MISO, SCK"
+Kết nối,J3,1,"Header 1x4, 2,54 mm",THT,"SWD: 3V3 (qua jumper swd-3v3), SWDIO, SWCLK, GND"
+Kết nối,"J9,J10",2,"Header 1x2, 2,54 mm",THT,"J9 = I2C (SCL, SDA); J10 = UART (RX, TX)"
+Kết nối,"J11,J12",2,"Header 1x3, 2,54 mm",THT,"SPI1: J11 = SCK, MISO, MOSI; J12 = CS3, CS2, CS1"
+Kết nối,J18,1,"Header 2x3, 2,54 mm",THT,Cổng cấp 3V3 và GND cho module ngoài
+Nút/công tắc,SW1,1,"Nút nhấn RESET SMD 3 x 6 x 2,5 mm",SMD,Footprint tue_sw_smd_3x6x2.5mm
+Nút/công tắc,SW3,1,"Công tắc gạt SPDT SS12D00 (chân 2,5 mm, 3P)",SMD,Chọn BOOT0 (LOW = chạy chương trình)
+Jumper hàn,"MS1.1-1.3, MS2.1-2.3",6,Jumper hàn 3 pad (không có linh kiện),SolderJumper-3,"Chọn vi bước cho từng TMC2209: phải hàn nối một phía, không để hở"
+Jumper hàn,swd-3v3,1,Jumper hàn 2 pad (không có linh kiện),SolderJumper-2,Mặc định hở. Chỉ hàn nối khi muốn cấp 3V3 từ bộ nạp qua J3
+Cơ khí,4 lỗ góc,4,Vít M4,"Lỗ Ø4,2 tại (±45, ±45) mm",Dùng cho vỏ in 3D (xem enclosure/)

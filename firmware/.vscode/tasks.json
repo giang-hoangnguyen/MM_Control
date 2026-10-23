@@ -1,0 +1,50 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Convert ELF to BIN",
+            "type": "shell",
+            "command": "arm-none-eabi-objcopy",
+            "args": [
+                "-O",
+                "binary",
+                "${workspaceFolder}/build/Debug/MM_Control.elf",
+                "${workspaceFolder}/build/Debug/MM_Control.bin"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Flash Firmware - USB DFU",
+            "type": "shell",
+            "command": "dfu-util",
+            "args": [
+                "-a",
+                "0",
+                "-s",
+                "0x08000000:leave",
+                "-D",
+                "${workspaceFolder}/build/Debug/MM_Control.bin"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Flash Firmware - Black Magic Probe",
+            "type": "shell",
+            "command": "arm-none-eabi-gdb",
+            "args": [
+                "-x",
+                "${workspaceFolder}/.vscode/flash.gdb"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        }
+    ]
+}
