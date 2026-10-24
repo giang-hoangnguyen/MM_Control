@@ -5,11 +5,14 @@ Cách dùng: mở file MM_Control_Board_v7.f3d (có mô hình board dạng mesh)
 trong Fusion (Utilities > Scripts and Add-Ins) hoặc qua Fusion MCP. Script xóa component
 '3D_Printing_Components' cũ rồi dựng lại, nên chạy lại được.
 
-Script đọc bounding box của các mesh LED (MCU1, 5V1, 3V3, STEP_EN1, DC_Fault1-4, VCC1)
-trong file để cắt rãnh LED. Chạy trong file khác thì cần các mesh cùng tên, hoặc bỏ phần 'groups'.
+Vị trí LED, terminal, đầu XH lấy từ MM_Control.kicad_pcb (x = x_kicad - 100, y = 100 - y_kicad),
+không đọc mesh nên chạy được trong file Fusion bất kỳ.
 
-Đơn vị trong script: mm (đổi sang cm khi gọi API Fusion). Trục Z hướng lên, PCB nằm z = 0 .. 1,6 mm,
-tâm board ở gốc tọa độ, board 100 x 100 mm, lỗ vít Ø4,2 mm tại (±45, ±45).
+Đơn vị trong script: mm (đổi sang cm khi gọi API Fusion). Trục Z hướng lên, PCB nằm z = DZ .. DZ + 1,6 mm
+(DZ: chân đỡ nâng board lên), tâm board ở gốc tọa độ, board 100 x 100 mm, lỗ vít Ø4,2 mm tại (±45, ±45).
+
+Quy ước cắt cửa: hai ô cắt cách nhau dưới 10 mm thì gộp thành một ô, không chừa vách (vách mỏng dễ gãy).
+Khe thông gió 2 mm là ngoại lệ vì cố ý chừa sườn.
 """
 import adsk.core, adsk.fusion, json
 A = adsk.core
@@ -77,6 +80,7 @@ def run(context):
     POST_R, SCREW_HOLE, CB_R, CB_D = 5.5, 2.25, 4.0, 4.5   # trụ, lỗ vít M4 Ø4,5, lỗ lõm Ø8 sâu 4,5
     INS_R, INS_DEPTH = 2.8, 9.0   # lỗ heat-set insert M4: Ø5,6, sâu 9
     HC = 45.0                     # vị trí lỗ vít (±45)
+    DZ = 1.0                      # chân đỡ cao thêm: thân XH nằm ngang chìa qua mép board, phải nâng board khỏi gờ định vị
     FILL = 50.8
     BR = 2.0                      # bán kính bo góc khoang tay thao tác
 
@@ -88,12 +92,12 @@ def run(context):
     for sx in (-1, 1):
         for sy in (-1, 1):
             cx, cy = sx * HC, sy * HC
-            U(base, cyl(cx, cy, ZF - 0.5, 0.0, POST_R))                    # standoff
-            U(base, box(min(cx, sx * FILL), max(cx, sx * FILL), min(cy, sy * FILL), max(cy, sy * FILL), ZF - 0.5, 0.0))
+            U(base, cyl(cx, cy, ZF - 0.5, DZ, POST_R))                     # standoff
+            U(base, box(min(cx, sx * FILL), max(cx, sx * FILL), min(cy, sy * FILL), max(cy, sy * FILL), ZF - 0.5, DZ))
     for sx in (-1, 1):
         for sy in (-1, 1):
             cx, cy = sx * HC, sy * HC
-            D(base, cyl(cx, cy, ZB - 1.0, 1.0, SCREW_HOLE))
+            D(base, cyl(cx, cy, ZB - 1.0, DZ + 1.0, SCREW_HOLE))
             D(base, cyl(cx, cy, ZB - 1.0, ZB + CB_D, CB_R))
 
     # ---- nắp ----
@@ -102,49 +106,41 @@ def run(context):
     for sx in (-1, 1):
         for sy in (-1, 1):
             cx, cy = sx * HC, sy * HC
-            U(lid, cyl(cx, cy, 1.6, ZR + 0.5, POST_R))
-            U(lid, box(min(cx, sx * FILL), max(cx, sx * FILL), min(cy, sy * FILL), max(cy, sy * FILL), 1.6, ZR + 0.5))
+            U(lid, cyl(cx, cy, 1.6 + DZ, ZR + 0.5, POST_R))
+            U(lid, box(min(cx, sx * FILL), max(cx, sx * FILL), min(cy, sy * FILL), max(cy, sy * FILL), 1.6 + DZ, ZR + 0.5))
     for sx in (-1, 1):
         for sy in (-1, 1):
-            D(lid, cyl(sx * HC, sy * HC, 1.0, 1.6 + INS_DEPTH, INS_R))
+            D(lid, cyl(sx * HC, sy * HC, 1.0, 1.6 + DZ + INS_DEPTH, INS_R))
     D(lid, D(rrect(51.8, RC + 1.3, -1.0, 3.3), rrect(CH, RC, -2.0, 4.3)))   # rãnh khớp với gờ của đế
 
     # ---- cutout ----
     RZ0, RZ1 = ZR - 1.0, ZT + 1.0
-    WZ1 = 11.5
+    WZ1 = 11.5 + DZ
     big = []     # khoang tay thao tác trên mái: bo góc R2
-    small = []   # khe thông gió, rãnh LED: không bo
+    small = []   # khe thông gió, cửa sổ LED: không bo
     wall = []    # cửa sổ ở vách (cắt cả nắp và đế)
-    for (y0, y1) in ((12.32, 23.22), (27.58, 38.48), (-23.72, -12.82)):      # 3 terminal bên +X
-        wall.append((48.0, 54.0, y0 - 0.5, y1 + 0.5))
-        big.append((39.5, 48.5, y0 - 0.3, y1 + 0.3))
-    for (y0, y1) in ((7.85, 18.75), (23.09, 33.98)):                          # 2 terminal bên -X
-        wall.append((-54.0, -48.0, y0 - 0.5, y1 + 0.5))
-    wall.append((-18.2, -6.7, 48.0, 54.0))                                    # CAN (J17)
-    big.append((-17.7, -7.2, 41.5, 48.5))
-    big.append((-50.5, -28.0, -24.0, 34.5))                                   # khoang cổng XH (stepper) + servo
-    big.append((-37.5, 37.5, -50.5, -37.0))                                   # khoang phía -Y
-    big.append((-37.5, -20.0, 38.0, 50.5))                                    # SWD
+    # Terminal bên +X: hai terminal trên cách nhau 4,4 mm nên gộp một ô; terminal dưới gộp thêm LED VCC1 (48,09; -27,48)
+    wall.append((48.0, 54.0, 11.82, 38.98))
+    wall.append((48.0, 54.0, -24.22, -12.32))
+    big.append((39.5, 48.5, 12.02, 38.78))
+    big.append((39.5, 49.0, -29.7, -12.52))
+    wall.append((-54.0, -48.0, 7.35, 34.48))                                  # 2 terminal bên -X, gộp một ô
+    wall.append((-18.2, 13.7, 48.0, 54.0))                                    # CAN (J17) + USB-C, cách 6,4 mm nên gộp
+    # Đầu XH stepper và servo cắm ngang từ phía -Y; các cửa cách nhau 1,4 / 6,7 / 7,3 mm nên gộp một cửa.
+    # XH: thân 12,4 mm, tâm x = -17,25; 3,88; 25,6. Servo SPOX 3 chân: tâm x = -31,8 (đoán từ footprint), thân 9,9 mm. Mỗi bên chừa 1 mm
+    wall.append((-37.7, 32.8, -54.0, -48.0))
+    big.append((-50.5, -28.0, -24.0, 34.5))                                   # khoang header SPI/I2C/UART và terminal -X
+    big.append((-37.5, -7.2, 38.0, 50.5))                                     # SWD + CAN, gộp
     big.append((16.5, 37.0, 38.0, 50.5))                                      # BOOT0 / RESET
     for xc in (25.6, 3.88, -17.25):                                           # khe thông gió trên 3 TMC2209
         for k in (-8, -4, 0, 4, 8):
             small.append((xc + k - 1.0, xc + k + 1.0, -34.6, -28.0))
-    groups = {'A': ['MCU1', '5V1', '3V3', 'STEP_EN1'],
-              'B': ['DC_Fault1', 'DC_Fault2', 'DC_Fault3', 'DC_Fault4'],
-              'C': ['VCC1']}
-    bbs = {}
-    for c in des.allComponents:
-        for mb in c.meshBodies:
-            if mb.name in sum(groups.values(), []):
-                b = mb.boundingBox
-                bbs[mb.name] = [b.minPoint.x * 10, b.minPoint.y * 10, b.maxPoint.x * 10, b.maxPoint.y * 10]
-    for g, names in groups.items():
-        r = [bbs[n] for n in names if n in bbs]
-        x0 = min(v[0] for v in r); y0 = min(v[1] for v in r)
-        x1 = max(v[2] for v in r); y1 = max(v[3] for v in r)
-        cx, cy = (x0 + x1) / 2.0, (y0 + y1) / 2.0
-        hx, hy = max((x1 - x0) / 2.0 + 0.8, 1.5), max((y1 - y0) / 2.0 + 0.8, 1.5)
-        small.append((cx - hx, cx + hx, cy - hy, cy + hy))
+    # cửa sổ LED: toạ độ LED từ PCB, chừa 2,2 mm quanh tâm LED ngoài cùng
+    leds = {'status': [(-15.55, -14.95), (-15.50, -16.57), (-15.50, -18.20), (-15.53, -19.83)],   # STEP_EN1, MCU1, 3V3, 5V1
+            'fault': [(13.18, 21.53), (13.18, 23.16), (13.18, 24.78), (13.18, 26.41)]}              # DC_Fault4..1
+    for pts in leds.values():
+        small.append((min(p[0] for p in pts) - 2.2, max(p[0] for p in pts) + 2.2,
+                      min(p[1] for p in pts) - 2.2, max(p[1] for p in pts) + 2.2))
 
     for (x0, x1, y0, y1) in big:
         D(lid, rbox(x0, x1, y0, y1, BR, RZ0, RZ1))
@@ -154,8 +150,6 @@ def run(context):
     for (x0, x1, y0, y1) in wall:
         D(lid, box(x0, x1, y0, y1, -1.0, WZ1))
         D(base, box(x0, x1, y0, y1, 0.0, WZ1))
-    D(lid, box(-0.3, 13.7, 47.0, 54.0, -1.0, 6.4))                            # USB-C
-    D(base, box(-0.3, 13.7, 47.0, 54.0, -1.0, 6.4))
 
     # ---- tạo component ----
     grp = root.occurrences.addNewComponent(A.Matrix3D.create())
