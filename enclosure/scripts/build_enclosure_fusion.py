@@ -132,9 +132,10 @@ def run(context):
     big.append((-50.5, -28.0, -24.0, 34.5))                                   # khoang header SPI/I2C/UART và terminal -X
     big.append((-37.5, -7.2, 38.0, 50.5))                                     # SWD + CAN, gộp
     big.append((16.5, 37.0, 38.0, 50.5))                                      # BOOT0 / RESET
-    for xc in (25.6, 3.88, -17.25):                                           # khe thông gió trên 3 TMC2209
-        for k in (-8, -4, 0, 4, 8):
-            small.append((xc + k - 1.0, xc + k + 1.0, -34.6, -28.0))
+    # khe thông gió căn giữa 3 tản nhiệt TMC2209 (tản 9 x 9 mm, tâm y = -33,78): 3 khe 2 x 7 mm, bước 4 mm
+    for xc in (25.6, 3.88, -17.25):
+        for k in (-4, 0, 4):
+            small.append((xc + k - 1.0, xc + k + 1.0, -33.78 - 3.5, -33.78 + 3.5))
     # cửa sổ LED: toạ độ LED từ PCB, chừa 2,2 mm quanh tâm LED ngoài cùng
     leds = {'status': [(-15.55, -14.95), (-15.50, -16.57), (-15.50, -18.20), (-15.53, -19.83)],   # STEP_EN1, MCU1, 3V3, 5V1
             'fault': [(13.18, 21.53), (13.18, 23.16), (13.18, 24.78), (13.18, 26.41)]}              # DC_Fault4..1
